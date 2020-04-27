@@ -333,10 +333,19 @@ class _ConfigBuilder:
         return conf
 
     def build_beacon_policy(self, service):
-        """ Returns a beacon policy, in which ISD loops are not allowed """
-        return {'Filter': {
-            'AllowIsdLoop': False
-        }}
+        """
+        Returns a beacon policy, in which ISD loops are not allowed
+        For non-core ASes the BestSetSize is increased from the default of 5 to 20
+        """
+        if service.AS.is_core:
+            return {'Filter': {
+                'AllowIsdLoop': False
+            }}
+        else:
+            return {'BestSetSize': 20,
+                    'Filter': {
+                        'AllowIsdLoop': False
+            }}
 
     def _build_general_conf(self, instance_name, instance_dir=None):
         """ Builds the 'general' configuration section common to SD,CS and BR """
